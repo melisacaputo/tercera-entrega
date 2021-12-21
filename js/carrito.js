@@ -63,7 +63,7 @@ function renderizarProductos() {
 
 //funcion utilizando AJAX para obtener la informacion de los productos creados en el archivo json
 function obtenerJSON() {
-  $.getJSON("../productos.json", function (respuesta, estado) {
+  $.getJSON("./json/productos.json", function (respuesta, estado) {
     if (estado == "success") {
       productosJSON = respuesta;
       renderizarProductos();
@@ -120,7 +120,7 @@ function agregarAlCarrito(productoAgregado) {
                             <td> ${productoEnCarrito.nombre}</td>
                             <td id='${productoEnCarrito.id}'> ${productoEnCarrito.cantidad}</td>
                             <td> ${productoEnCarrito.precio}</td>
-                            <td><button class='btn btn-light' id="btn-eliminar">🗑️</button></td>
+                            <td><button class='btn btn-light' id="btn-eliminar-${productoEnCarrito.id}">🗑️</button></td>
                             </tr>`);
 
   } else {
@@ -134,15 +134,6 @@ function agregarAlCarrito(productoAgregado) {
   localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-//funcion para eliminar productos del carrito, todavia no logro que funcione bien, lo dejo comentado por si me queres hacer alguna aclaracion
-/* function eliminarProducto(prod){
-  $("#btn-eliminar").on('click', function () {
-    $(`#fila${prod.id}`).remove();
-    let eliminado = carrito.findIndex(p => p.id == prod.id);
-    carrito.splice(eliminado, 1);
-    $("#gastoTotal").html(`Total: $ ${calcularTotalCarrito()}`);
-  });
-} */
 
 //funcion para calcular el monto total del carrito y la cantidad
 function calcularTotalCarrito() {
