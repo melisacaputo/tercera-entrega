@@ -2,7 +2,6 @@
 let carrito = cargarCarrito();
 //inicializo la variable productosJSON para poder trabajar con la funcion obtenerJSON
 let productosJSON = [];
-
 //cargo la variable cantidad para que no se pierdan los datos almacenados al refrescar la ventana
 let cantidadTotalCompra = carrito.length;
 
@@ -36,9 +35,11 @@ $(document).ready(function () {
   $("#seleccion option[value='pordefecto']").attr("selected", true);
   $("#seleccion").on("change", ordenarProductos);
 
-  //llamo a la funciones que necesitan renderizarse 
+  //llamo a las funciones que necesitan renderizarse 
+  $("#gastoTotal").html(`Total: $ ${calcularTotalCarrito()}`);
   obtenerJSON();
   renderizarProductos();
+  mostrarEnTabla();
 });
 
 //funcion para el renderizado de los productos en cards
@@ -54,9 +55,10 @@ function renderizarProductos() {
                                     <button class="botones" id="btn${producto.id}"> Agregar al carrito </button>
                                     </div>
                                     </div>`);
-
+                    
     $(`#btn${producto.id}`).on('click', function () {
       agregarAlCarrito(producto);
+      $(`#btn${producto.id}`).fadeOut(200).fadeIn(200);
     });
   }
 };
@@ -132,8 +134,30 @@ function agregarAlCarrito(productoAgregado) {
 
   $("#gastoTotal").html(`Total: $ ${calcularTotalCarrito()}`);
   localStorage.setItem("carrito", JSON.stringify(carrito));
+  mostrarEnTabla();
 }
 
+//funcion para rehacer la tabla del modal cada vez que se refresca la pagina y eliminar productos del carrito
+function mostrarEnTabla() {
+  $("#tablabody").empty();
+  carrito.forEach(function (prod) {
+    $("#tablabody").append(`<tr id='fila${prod.id}' class='tabla-carrito'>
+                            <td> ${prod.nombre}</td>
+                            <td id='${prod.id}'> ${prod.cantidad}</td>
+                            <td> ${prod.precio}</td>
+                            <td><button class='btn btn-light' id="eliminar${prod.id}">🗑️</button></td>
+                            </tr>`);
+
+    $(`#eliminar${prod.id}`).click(function () {
+      let eliminado = carrito.indexOf(p => p.id = prod.id);
+      carrito.splice(eliminado, 1);
+      console.log(eliminado);
+      $(`#fila${prod.id}`).remove();
+      $("#gastoTotal").html(`Total: $ ${calcularTotalCarrito()}`);
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+    })
+  })
+};
 
 //funcion para calcular el monto total del carrito y la cantidad
 function calcularTotalCarrito() {
