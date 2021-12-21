@@ -55,7 +55,7 @@ function renderizarProductos() {
                                     <button class="botones" id="btn${producto.id}"> Agregar al carrito </button>
                                     </div>
                                     </div>`);
-                    
+
     $(`#btn${producto.id}`).on('click', function () {
       agregarAlCarrito(producto);
       $(`#btn${producto.id}`).fadeOut(200).fadeIn(200);
@@ -140,7 +140,7 @@ function agregarAlCarrito(productoAgregado) {
 //funcion para rehacer la tabla del modal cada vez que se refresca la pagina y eliminar productos del carrito
 function mostrarEnTabla() {
   $("#tablabody").empty();
-  carrito.forEach(function (prod) {
+  for (const prod of carrito) {
     $("#tablabody").append(`<tr id='fila${prod.id}' class='tabla-carrito'>
                             <td> ${prod.nombre}</td>
                             <td id='${prod.id}'> ${prod.cantidad}</td>
@@ -149,14 +149,14 @@ function mostrarEnTabla() {
                             </tr>`);
 
     $(`#eliminar${prod.id}`).click(function () {
-      let eliminado = carrito.indexOf(p => p.id = prod.id);
+      let eliminado = carrito.findIndex(p => p.id == prod.id);
       carrito.splice(eliminado, 1);
       console.log(eliminado);
       $(`#fila${prod.id}`).remove();
       $("#gastoTotal").html(`Total: $ ${calcularTotalCarrito()}`);
       localStorage.setItem("carrito", JSON.stringify(carrito));
     })
-  })
+  }
 };
 
 //funcion para calcular el monto total del carrito y la cantidad
